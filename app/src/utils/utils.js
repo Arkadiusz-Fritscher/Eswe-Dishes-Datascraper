@@ -1,11 +1,24 @@
+"use strict";
+import * as fs from "fs";
+
+export function getDatesToScrape() {
+  const checkDay = 5; // Friday (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+
+  const weekDays = [
+    // getDateOfSpecificDay(-1, checkDay),
+    getDateOfSpecificDay(0, checkDay),
+    getDateOfSpecificDay(1, checkDay),
+  ];
+
+  const menuDays = weekDays.flatMap((day) => getWeekdaysFromMondayToFriday(new Date(day)));
+
+  return menuDays;
+}
+
 export function getDateOfSpecificDay(weekOffset, dayOfWeek) {
   const today = new Date();
   const currentDayOfWeek = today.getDay(); // 0 (Sonntag) bis 6 (Samstag)
-
-  // Berechne den Unterschied zum gewünschten Tag dieser Woche
   const difference = dayOfWeek - currentDayOfWeek;
-
-  // Berechne das Datum des gewünschten Tages mit dem Offset für die Woche
   const targetDate = new Date(today);
   targetDate.setDate(today.getDate() + difference + weekOffset * 7);
 
@@ -20,7 +33,7 @@ export function formatDateToYYYYMMDD(date) {
 }
 
 export function extractDateAndFormatToISO(dateString) {
-  // Extrahiere den Tag und den Monat aus dem String
+  // Tag und den Monat aus dem String
   const dateParts = dateString.match(/(\d{2})\.(\d{2})\./);
   if (!dateParts) {
     throw new Error("Invalid date format");
@@ -28,14 +41,8 @@ export function extractDateAndFormatToISO(dateString) {
 
   const day = dateParts[1];
   const month = dateParts[2];
-
-  // Hole das aktuelle Jahr
   const currentYear = new Date().getFullYear();
-
-  // Erstelle ein Date-Objekt
   const date = new Date(`${currentYear}-${month}-${day}`);
-
-  // Formatiere das Datum im ISO-Format (YYYY-MM-DD)
   const isoDate = date.toISOString().split("T")[0];
 
   return isoDate;
@@ -47,11 +54,11 @@ export function getWeekdaysFromMondayToFriday(date) {
   const currentMonth = date.getMonth();
   const currentYear = date.getFullYear();
 
-  // Berechne den Montag dieser Woche
+  // Berechnet den Montag dieser Woche
   const monday = new Date(date);
   monday.setDate(currentDate - (dayOfWeek - 1)); // (dayOfWeek - 1) gibt den Abstand zum Montag
 
-  // Erstelle ein Array für die Wochentage von Montag bis Freitag
+  // Array der Wochentage von Montag bis Freitag
   const weekdays = [];
   for (let i = 0; i < 5; i++) {
     // 5 Tage von Montag bis Freitag
@@ -76,3 +83,27 @@ export function getWeekNumber(d) {
   // Return array of year and week number
   return [d.getUTCFullYear(), weekNo];
 }
+
+export function getDateDetail(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  function toTwoDigits(number) {
+    return number.toString().length === 1 ? `0${number}` : number;
+  }
+
+  return { day: toTwoDigits(day), month: toTwoDigits(month), year };
+}
+
+export const log = (msg, level = "info") => {
+  const date = new Date().toLocaleString();
+  const logMessage = `${date} - ${level.toUpperCase()}: ${msg}\n`;
+
+  fs.appendFile("./logs.txt", logMessage, function (err) {
+    if (err) {
+      return console.log(err);
+    }
+  });
+};

@@ -1,7 +1,8 @@
+"use strict";
 import puppeteer from "puppeteer";
-import { extractDateAndFormatToISO } from "./utils.js";
+import { extractDateAndFormatToISO } from "./utils/utils.js";
 
-const baseUrl = "https://www.speiseplan-portal.klueh.de/menu/05%20ESWE%20Versorgungs%20AG/Speiseplan/date/";
+const baseUrl = process.env.SCRAPE_BASE_URL;
 
 export const getMenus = async (days) => {
   try {
@@ -9,7 +10,7 @@ export const getMenus = async (days) => {
     console.info(`Browser wird ${headless ? "im Headless Modus" : ""} gestartet`);
 
     const browser = await puppeteer.launch({
-      headless: headless,
+      headless,
       defaultViewport: null,
     });
 
@@ -20,7 +21,7 @@ export const getMenus = async (days) => {
     console.info(`Daten werden von der Webseite gesammelt...`);
 
     for (const day of days) {
-      const menu = await getMenuForDate(`${baseUrl}${day}`, page);
+      const menu = await getMenuForDate(`${baseUrl}${day}`, page, browser);
 
       if (!menu || !menu.length) {
         console.warn(`[ - WARN - ] Keine Einträge für den ${day} gefunden`);
@@ -44,14 +45,13 @@ export const getMenus = async (days) => {
   }
 };
 
-export const getMenuForDate = async (URL, page) => {
+export const getMenuForDate = async (URL, page, browser) => {
   if (!URL) {
     throw new Error("Please provide a URL");
   }
 
   try {
-    // const page = await browser.newPage();
-
+    // Navigate to the URL
     await page.goto(URL, {
       waitUntil: "domcontentloaded",
     });
@@ -59,11 +59,11 @@ export const getMenuForDate = async (URL, page) => {
     // Wait for the menus container to be rendered
     await page.waitForSelector("div.category-grid.ng-star-inserted", {
       visible: true,
-      timeout: 30000, // 5 seconds
+      timeout: 30000, // 30 seconds
     });
 
     // Fetch the dish container element
-    const getCurrentMenu = await page.evaluate(() => {
+    const scrapedPageData = await page.evaluate(async () => {
       // Fetch the dish container element
       const dishes = document.querySelector("div.category-grid.ng-star-inserted");
       // Fetch the dish elements from the previously fetched dish container element
@@ -72,13 +72,11 @@ export const getMenuForDate = async (URL, page) => {
       const date = document.querySelector(
         "a.mat-tab-link.mat-focus-indicator.mat-tab-label-active"
       ).innerText;
-
       // Fetch the sub-elements from the previously fetched quote element
       return Array.from(dishElements).map((dish) => {
-        // Fetch the sub-elements from the previously fetched quote element
-        // Get the displayed text and return it (`.innerText`)
         const category = dish.querySelector("h3.category-header").innerText.trim();
-        const content = dish.querySelector("mat-card-content.mat-card-content.product-content");
+        const card = dish.querySelector("mat-card.mat-card.product-card");
+        const content = card.querySelector("mat-card-content.mat-card-content.product-content");
         const title = content.querySelector(".product-title").innerText.trim();
         const price = content.querySelector(".price.ng-star-inserted").innerText.trim();
         const labelContainer = content.querySelector("app-product-label-list");
@@ -92,11 +90,11 @@ export const getMenuForDate = async (URL, page) => {
     });
 
     // Format the date
-    const dayMenu = getCurrentMenu.map((menu) => {
-      return { ...menu, date: extractDateAndFormatToISO(menu.date), source: URL };
+    const menu = scrapedPageData.map((data) => {
+      return { ...data, date: extractDateAndFormatToISO(data.date) };
     });
 
-    return dayMenu;
+    return menu;
   } catch (error) {
     if (error.name === "TimeoutError") {
       console.error("INFO - Timeout: Klüh Daten-Elemente konnten nicht gefunden werden.");

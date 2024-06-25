@@ -2,9 +2,10 @@
   "name": "klueh-scrape",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --env-file=.env app/app.js"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +13,7 @@
   "type": "module",
   "types": "module",
   "dependencies": {
+    "nodemailer": "^6.9.14",
     "puppeteer": "^22.10.0"
   }
 }

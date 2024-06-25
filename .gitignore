@@ -1,3 +1,7 @@
-/export/*
+/app/exports/*
 logs.txt
 node_modules
+.env
+/*.sh
+testData.js
+.DS_Store
