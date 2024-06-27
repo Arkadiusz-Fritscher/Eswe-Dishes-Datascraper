@@ -9,6 +9,10 @@ Rename the `.env.example` to `.env`
 Execute the following command:
 
 ```
+npm install
+```
+
+```
 npm start
 ```
 

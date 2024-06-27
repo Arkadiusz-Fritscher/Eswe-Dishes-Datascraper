@@ -1,18 +1,11 @@
 {
   "data": [
     {
-      "createdAt": "2024-06-25T21:15:27.414Z",
-      "filepath": "./app/exports/speiseplan_24_06-28_06_1719532800000.json",
-      "timestamp": 1719532800000,
+      "createdAt": "2024-06-27T11:12:57.532Z",
+      "filepath": "./app/exports/speiseplan-24_06-05_07-1720137600000.json",
+      "timestamp": 1720137600000,
       "mailSent": true,
       "id": 1
-    },
-    {
-      "createdAt": "2024-06-25T21:25:53.258Z",
-      "filepath": "./app/exports/speiseplan_24_06-28_06_1719532800000.json",
-      "timestamp": 1719532800000,
-      "mailSent": false,
-      "id": 2
     }
   ]
 }

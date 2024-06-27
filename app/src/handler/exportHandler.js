@@ -10,7 +10,7 @@ function formatFileName(firstDate, lastDate) {
   const lastDateParts = getDateDetail(lastDate);
   const lastDateTimestamp = new Date(lastDate).getTime();
 
-  const dates = `${firstDateParts.day}_${firstDateParts.month}-${lastDateParts.day}_${lastDateParts.month}_${lastDateTimestamp}`;
+  const dates = `${firstDateParts.day}_${firstDateParts.month}-${lastDateParts.day}_${lastDateParts.month}-${lastDateTimestamp}`;
 
   return { dates, timestamp: lastDateTimestamp };
 }
@@ -52,7 +52,7 @@ export function saveDishesToJsonFile(data, fileName = exportFileName) {
 
   const jsonData = JSON.stringify(result, null, 2); // `null, 2` für formatierte JSON-Daten
   const { dates, timestamp } = formatFileName(data[0].date, data[data.length - 1].date);
-  const path = `${exportPath}${fileName}_${dates}.json`;
+  const path = `${exportPath}${fileName}-${dates}.json`;
 
   fs.writeFileSync(path, jsonData, "utf8", (err) => {
     if (err) {

@@ -1,7 +1,8 @@
 "use strict";
+
 import { getDatesToScrape, log } from "./src/utils/utils.js";
 import { getMenus } from "./src/scraper.js";
-import { handleMailSending } from "./src/handler/mailHandler.js";
+import { handleMailSending, getWeek } from "./src/handler/mailHandler.js";
 import { saveDishesToJsonFile, checkIfScrapingIsNeeded } from "./src/handler/exportHandler.js";
 import { setData } from "./src/handler/dbHandler.js";
 
