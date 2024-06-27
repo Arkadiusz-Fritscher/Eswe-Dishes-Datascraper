@@ -12,6 +12,7 @@ export const getMenus = async (days) => {
     const browser = await puppeteer.launch({
       headless,
       executablePath,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
     const page = await browser.newPage();
