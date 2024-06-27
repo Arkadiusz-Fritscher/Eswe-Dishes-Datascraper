@@ -2,16 +2,16 @@
 import puppeteer from "puppeteer";
 import { extractDateAndFormatToISO } from "./utils/utils.js";
 
-const baseUrl = process.env.SCRAPE_BASE_URL;
-
 export const getMenus = async (days) => {
   try {
-    const headless = true;
+    const headless = process.env.SCRAPE_HEADLESS === "true" ? true : false;
+    const baseUrl = process.env.SCRAPE_BASE_URL;
+    const executablePath = process.env.CHROMIUM_PATH ?? puppeteer.executablePath();
     console.info(`Browser wird ${headless ? "im Headless Modus" : ""} gestartet`);
 
     const browser = await puppeteer.launch({
       headless,
-      defaultViewport: null,
+      executablePath,
     });
 
     const page = await browser.newPage();
