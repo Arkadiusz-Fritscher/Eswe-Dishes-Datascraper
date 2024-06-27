@@ -59,8 +59,8 @@ export function saveDishesToJsonFile(data, fileName = exportFileName) {
       console.error("Fehler beim Schreiben der Datei:", err);
       throw err;
     }
-    console.info(`Es wurden erfolgreich ${data.length} Datensätze in "${path}" geschrieben`);
   });
 
+  console.info(`Erfolgreich ${data.length} Datensätze in "${path}" gespeichert`);
   return { path, timestamp };
 }

@@ -78,110 +78,98 @@ export async function handleMailSending(fileName, filePath, id) {
 
     const options = {
       subject: `Neue Speiseplan-Daten für die KW${startDates?.kw} und KW${endDates?.kw}`,
-      html: `<!DOCTYPE html>
-<html lang="en">
+      html: `
+      <!DOCTYPE html>
+          <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Document</title>
+                <style>
+                    body {
+                        font-family: HelveticaNeueLTStd-Roman, 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+                        background-color: #f8f9fa;
+                        margin: 0;
+                        padding: 24px;
+                    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body {
-            font-family: HelveticaNeueLTStd-Roman, 'Helvetica Neue', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 24px;
-        }
+                    * {
+                        box-sizing: border-box;
+                        margin: 0;
+                        padding: 0;
+                    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+                    h1,
+                    h2,
+                    h3 {
+                        color: #141414;
+                    }
 
-        h1,
-        h2,
-        h3 {
-            color: #141414;
-        }
+                    code {
+                        line-break: anywhere;
+                        font-size: 0.9rem;
+                    }
 
-        code {
-            line-break: anywhere;
-            font-size: 0.9rem;
-        }
+                    h1 {
+                        font-size: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    }
 
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
+                    h2 {
+                        font-size: 1.2rem;
+                        margin-bottom: 1rem;
+                    }
 
-        h2 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
+                    p,
+                    a,
+                    span {
+                        font-size: 1rem;
+                        line-height: 1.5;
+                        color: #2f2f2f;
+                    }
 
-        p,
-        a,
-        span {
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #2f2f2f;
-        }
+                    ul {
+                        list-style-type: none;
+                        margin-bottom: 1rem;
+                    }
 
-        ul {
-            list-style-type: none;
-            margin-bottom: 1rem;
-        }
+                    li {
+                        margin-bottom: 0.5rem;
+                    }
+                </style>
+            </head>
 
-        li {
-            margin-bottom: 0.5rem;
-        }
-    </style>
-</head>
+            <body>
+                <div style="max-width: 600px; margin-inline: auto;">
+                    <header>
+                        <h1>Neue Speiseplan-Daten für KW${startDates.kw} und KW${endDates.kw} verfügbar</h1>
+                        <h2>Sehr geehrte Damen und Herren,</h2>
+                    </header>
+                    <main style="margin-block: 1.5rem;">
+                        <p>wir möchten Sie informieren, dass für die folgenden Kalenderwochen neue Speiseplan-Daten bereitstehen:</p><br>
+                        <ul>
+                            <li><strong>KW${startDates.kw} (${startDates.start} - ${startDates.end})</strong></li>
+                            <li><strong>KW${endDates.kw} (${endDates.start} - ${endDates.end})</strong></li>
+                        </ul>
 
-<body>
-    <div style="max-width: 600px; margin-inline: auto;">
-        <header>
-            <h1>Neue Speiseplan-Daten für KW${startDates.kw} und KW${endDates.kw} verfügbar</h1>
+                        <div
+                            style="padding: 1rem; border:1px solid rgb(226, 226, 226); border-radius: 0.3rem; background-color: rgb(242, 242, 242); margin-block: 1.5rem">
+                            <p>Bitte laden Sie die Daten aus dem Anhang dieser E-Mail herunter und speichern Sie die Datei als <code>'speiseplan.json'</code> ab.</p><br>
+                            <p>Anschließend ersetzen Sie die bestehende Datei im Filesystem des Typo3 Intranets unter dem Pfad <code>'fileadmin/dishes/speiseplan.json'</code> mit der neuen Datei.</p>
+                        </div>
 
-            <h2>Sehr geehrte Damen und Herren,</h2>
-        </header>
-        <main style="margin-block: 1.5rem;">
-
-            <p>wir möchten Sie informieren, dass für die folgenden Kalenderwochen neue Speiseplan-Daten bereitstehen:</p><br>
-            <ul>
-                <li><strong>KW${startDates.kw} (${startDates.start} - ${startDates.end})</strong></li>
-                <li><strong>KW${endDates.kw} (${endDates.start} - ${endDates.end})</strong></li>
-            </ul>
-
-
-            <div
-                style="padding: 1rem; border:1px solid rgb(226, 226, 226); border-radius: 0.3rem; background-color: rgb(242, 242, 242); margin-block: 1.5rem">
-                <p>Bitte laden Sie die Daten aus dem Anhang dieser E-Mail herunter und speichern Sie die Datei als
-                    <code>'speiseplan.json'</code> ab.
-                </p><br>
-                <p>Anschließend ersetzen Sie die bestehende Datei im Filesystem des Typo3 Intranets unter dem Pfad
-                    <code>'fileadmin/dishes/speiseplan.json'</code>
-                    mit der neuen Datei.
-                </p>
-            </div>
-
-            <p>Vielen Dank für Ihre Kooperation und guten Appetit!</p>
-
-            <p style="margin-top: 1.5rem;"><strong>Mit freundlichen Grüßen,</strong></p>
-
-            <p>Ihr Team</p>
-        </main>
-
-        <footer style="border-top: 1px solid gray; padding-top: 1rem">
-            <p style="font-size: 0.75rem; ">Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht auf diese Nachricht.</p>
-            <a href="mailto:arkadiusz.frtischer@eswe.com" style="font-size: 0.75rem; ">Kontakt</a>
-        </footer>
-
-    </div>
-</body>
-
-</html>`,
+                        <p>Vielen Dank für Ihre Kooperation und guten Appetit!</p>
+                        <p style="margin-top: 1.5rem;"><strong>Mit freundlichen Grüßen,</strong></p>
+                        <p>Ihr Team</p>
+                    </main>
+                    <footer style="border-top: 1px solid gray; padding-top: 1rem">
+                        <p style="font-size: 0.75rem; ">Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht auf diese Nachricht.</p>
+                        <a href="mailto:arkadiusz.fritscher@eswe.com" style="font-size: 0.75rem; ">Kontakt</a>
+                    </footer>
+                </div>
+            </body>
+        </html>
+      `,
       attachments: [
         {
           filename: fileName,
@@ -189,10 +177,9 @@ export async function handleMailSending(fileName, filePath, id) {
         },
       ],
     };
-
     sendMail(id, options);
   } else {
-    console.info("Die Daten wurden bereits per E-Mail versendet.");
+    console.info("Dieser Datensatz wurde bereits als E-Mail versendet. Es gibt keine aktuelleren Daten.");
     log(
       `Es wurde keine E-Mail für die ID: ${id} versendet. Die Daten sind nicht aktueller als die bereits versendeten Daten`,
       "info"

@@ -11,13 +11,16 @@ const menuDays = weekDays;
 
 const saveScapingData = (data) => {
   if (data?.length) {
-    console.info(`${data.length} Daten werden als Json-Datei gespeichert...`);
+    console.info(`Es wurden ${data.length} Datensätze gefunden`);
     const { path, timestamp } = saveDishesToJsonFile(data);
 
     log(`Erfolgreich ${data.length} Menüs gespeichert`, "info");
     const { status, data: dbEntry } = setData(path, timestamp);
 
-    handleMailSending(path.split("/").at(-1), path, dbEntry?.id);
+    if (process.env.SEND_MAIL && status === "success") {
+      handleMailSending(path.split("/").at(-1), path, dbEntry?.id);
+    }
+
     return true;
   }
 
@@ -28,7 +31,8 @@ const saveScapingData = (data) => {
 
 async function scrape() {
   console.info("Scraping gestartet");
-  const data = await getMenus(menuDays);
+  // const data = await getMenus(menuDays);
+  const { data } = await import("../testData.js");
 
   console.info("Scraping beendet");
   return data;
@@ -43,7 +47,7 @@ async function init() {
   }
 
   const data = await scrape();
-  const isDataSaved = saveScapingData(data);
+  saveScapingData(data);
 }
 
 init();
