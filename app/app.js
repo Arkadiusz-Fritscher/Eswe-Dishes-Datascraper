@@ -2,7 +2,7 @@
 
 import { getDatesToScrape, log } from "./src/utils/utils.js";
 import { getMenus } from "./src/scraper.js";
-import { handleMailSending, getWeek } from "./src/handler/mailHandler.js";
+import { handleMailSending } from "./src/handler/mailHandler.js";
 import { saveDishesToJsonFile, checkIfScrapingIsNeeded } from "./src/handler/exportHandler.js";
 import { setData } from "./src/handler/dbHandler.js";
 
@@ -31,8 +31,7 @@ const saveScapingData = (data) => {
 
 async function scrape() {
   console.info("Scraping gestartet");
-  // const data = await getMenus(menuDays);
-  const { data } = await import("../testData.js");
+  const data = await getMenus(menuDays);
 
   console.info("Scraping beendet");
   return data;
@@ -50,6 +49,5 @@ async function init() {
   saveScapingData(data);
 }
 
+// Start the scraping process
 init();
-
-// console.log(readJsonFileSync("./src/db.json"));
